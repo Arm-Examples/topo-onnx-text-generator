@@ -1,0 +1,33 @@
+services:
+  generator:
+    platform: linux/arm64
+    build:
+      context: .
+      args:
+        MODEL: ${MODEL}
+      secrets:
+        - hf_token
+    ports:
+      - "7860:7860"
+
+secrets:
+  hf_token:
+    environment: HF_TOKEN
+
+x-topo:
+  name: "Text Generator (ONNX Runtime GenAI)"
+  description: |
+    An on-device evaluation harness for Arm-optimised generative ONNX models.
+    Supply a compatible Hugging Face model, deploy it to your own Arm device,
+    generate text through a Gradio web UI, and measure time to first token and
+    decode throughput on the target CPU. No GPU required.
+  deployment_success_message: |
+    Text generator is live — open http://<target>:7860 to enter a prompt.
+  parameters:
+    MODEL:
+      description: "Hugging Face repository containing config.yaml and an ONNX Runtime GenAI bundle"
+      required: true
+      example: "Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4"
+      hints:
+        huggingface.task: text-generation
+        file.format: onnx
