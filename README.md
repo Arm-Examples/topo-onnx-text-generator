@@ -37,9 +37,9 @@ The downloader snapshots the repository so that ONNX external-data sidecars and 
 
 ## Build-time parameters
 
-The model identity is a Docker build argument, resolved at build time. There is no default.
+The model identity is a Docker build argument (`x-topo.parameters` in `compose.yaml`), resolved at build time:
 
-| Parameter | Required | Description                   | Example                                              |
+| Parameter | Required | Description                   | Default                                              |
 | --------- | -------- | ----------------------------- | ---------------------------------------------------- |
 | `MODEL`   | yes      | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
 
@@ -53,7 +53,7 @@ The easiest deployment path is [Topo](https://github.com/arm/topo).
 topo clone git@github.com:Arm-Examples/topo-onnx-text-generator.git
 ```
 
-Topo prompts for `MODEL` because the project has no default model.
+Accept the default Qwen model, or pass `MODEL=<hugging-face-repository>` to select another compatible model.
 
 ### Build and deploy
 

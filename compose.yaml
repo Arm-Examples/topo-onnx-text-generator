@@ -4,7 +4,7 @@ services:
     build:
       context: .
       args:
-        MODEL: ${MODEL}
+        MODEL: Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4
       secrets:
         - hf_token
     ports:
@@ -27,7 +27,7 @@ x-topo:
     MODEL:
       description: "Hugging Face repository containing config.yaml and an ONNX Runtime GenAI bundle"
       required: true
-      example: "Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4"
+      default: "Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4"
       hints:
         huggingface.task: text-generation
         file.format: onnx
