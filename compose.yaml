@@ -17,16 +17,15 @@ secrets:
 x-topo:
   name: "Text Generator (ONNX Runtime GenAI)"
   description: |
-    An on-device evaluation harness for Arm-optimised generative ONNX models.
-    Supply a compatible Hugging Face model, deploy it to your own Arm device,
-    generate text through a Gradio web UI, and measure time to first token and
-    decode throughput on the target CPU. No GPU required.
+    An on-device evaluation harness for Arm-optimized generative ONNX models.
+    Deploy a compatible Hugging Face model to an Arm Target, generate text
+    through a Gradio web interface, and measure time to first token and decode
+    throughput on the Target CPU. The Target does not require a GPU.
   deployment_success_message: |
-    Text generator is live — open http://<target>:7860 to enter a prompt.
+    Text generator deployed successfully. Open http://<target-ip>:7860 to enter a prompt.
   parameters:
     MODEL:
       description: "Hugging Face repository containing config.yaml and an ONNX Runtime GenAI bundle"
-      required: true
       default: "Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4"
       hints:
         huggingface.task: text-generation

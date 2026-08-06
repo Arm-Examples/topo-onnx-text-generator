@@ -1,18 +1,18 @@
 # Text Generator (ONNX Runtime GenAI)
 
-> This project is a [Topo](https://github.com/arm/topo) template and follows the [Topo Project Specification](https://github.com/arm/topo/tree/main/docs/project-specification).
+> This is a [Topo](https://github.com/arm/topo) Project and follows the [Topo Project Specification](https://github.com/arm/topo/tree/main/docs/project-specification).
 
-An on-device evaluation harness for Arm-optimised generative ONNX models. Supply a compatible Hugging Face model, deploy it to your own Arm device, enter prompts through a web UI, and evaluate generation quality and CPU performance on your real hardware.
+This on-device harness evaluates Arm-optimized generative ONNX models. Supply a compatible Hugging Face model and deploy the Project to an Arm Target. Use the web interface to enter prompts and evaluate generation quality and CPU performance on the Target.
 
 It demonstrates:
 
-- A multi-stage Docker build that snapshots a Hugging Face repository into the image at build time. The deployed device needs no Hugging Face token or network access.
-- A config-driven inference runner that maps each model repository's `config.yaml` to prompt processing and ONNX Runtime GenAI operations.
+- A multi-stage Docker build that snapshots a Hugging Face repository into the image at build time. The Target needs no Hugging Face token or network access.
+- A config-driven inference runner that maps `config.yaml` from each model repository to prompt processing and ONNX Runtime GenAI operations.
 - Streaming output with time to first token (TTFT), decode throughput, and token counts in a Gradio interface.
 
 ## Model compatibility
 
-The project supports ONNX Runtime GenAI repositories whose files follow the configuration patterns used by these models:
+The Project supports ONNX Runtime GenAI repositories whose files follow the configuration patterns used by these models:
 
 - [`Arm/gemma-3-1b-base-onnx-genai-int4-emb-int8`](https://huggingface.co/Arm/gemma-3-1b-base-onnx-genai-int4-emb-int8)
 - [`Arm/gemma-3-1b-instruct-onnx-genai-int4-emb-int8`](https://huggingface.co/Arm/gemma-3-1b-instruct-onnx-genai-int4-emb-int8)
@@ -33,29 +33,29 @@ A compatible repository must contain:
 - `genai_config.json`, the model and its external-data sidecar, `tokenizer.json`, and `tokenizer_config.json`.
 - The referenced Jinja chat template, when `config.yaml` specifies one.
 
-The downloader snapshots the repository so that ONNX external-data sidecars and tokenizer assets are included. The 8B models produce images larger than 5 GB before runtime dependencies; ensure the build host and target have enough disk space and memory.
+The 8B models produce images larger than 5 GB before runtime dependencies. Ensure that the Host and Target have enough disk space and memory.
 
-## Build-time parameters
+## Project parameter
 
-The model identity is a Docker build argument (`x-topo.parameters` in `compose.yaml`), resolved at build time:
+`MODEL` is an optional Project parameter passed to the Docker build as an argument:
 
 | Parameter | Required | Description                   | Default                                              |
 | --------- | -------- | ----------------------------- | ---------------------------------------------------- |
-| `MODEL`   | yes      | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
+| `MODEL`   | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
 
 ## Usage
 
-The easiest deployment path is [Topo](https://github.com/arm/topo).
+Install [Topo](https://github.com/arm/topo), then use it to clone and deploy the Project.
 
-### Clone the project
+### Clone the Project
+
+The clone step will prompt you for value for the `MODEL` parameter. Leave the input empty to select the default.
 
 ```bash
 topo clone git@github.com:Arm-Examples/topo-onnx-text-generator.git
 ```
 
-Accept the default Qwen model, or pass `MODEL=<hugging-face-repository>` to select another compatible model.
-
-### Build and deploy
+### Build and deploy the Project
 
 ```bash
 cd topo-onnx-text-generator
@@ -63,8 +63,8 @@ export HF_TOKEN=<your-hf-read-token>
 topo deploy --target <user@hostname>
 ```
 
-Topo builds the image on the host where the token is available and transfers the finished image to the Arm target. The target needs neither the token nor access to Hugging Face.
+Topo builds the image on the Host and transfers the finished image to the Target over SSH. The Target does not receive the token and does not need network access to download the model.
 
 ### What you will see
 
-Open `http://<ip-address-of-target>:7860`, enter a prompt, and choose **Generate**. Text streams into the interface while it reports TTFT, decode tokens per second, total latency, and prompt/output token counts.
+Open `http://<target-ip>:7860`, enter a prompt, and click **Generate**. Text streams into the interface while it reports TTFT, decode tokens per second, total latency, and prompt and output token counts.
