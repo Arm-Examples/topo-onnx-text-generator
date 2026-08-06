@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:alpine3.23 AS model-downloader
+FROM astral/uv:python3.12-bookworm-slim AS model-downloader
 
 WORKDIR /downloader
 
@@ -8,7 +8,7 @@ RUN uv sync --locked --no-install-project --only-group downloader
 ARG MODEL
 RUN --mount=type=secret,id=hf_token,env=HF_TOKEN uv run --no-sync hf download "$MODEL" --local-dir model
 
-FROM ghcr.io/astral-sh/uv:trixie-slim AS runtime
+FROM astral/uv:python3.12-bookworm-slim AS runtime
 
 WORKDIR /runtime
 
