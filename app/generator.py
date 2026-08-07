@@ -10,12 +10,7 @@ import yaml
 from jinja2 import Environment
 from tokenizers import Tokenizer
 
-NAMED_TEMPLATES = {
-    "gemma3_instruct": (
-        "{{ bos_token }}<start_of_turn>user\n{{ messages[0].content }}"
-        "<end_of_turn>\n<start_of_turn>model\n"
-    )
-}
+TEMPLATE_ALIASES = {"gemma3_instruct": "chat_template.jinja"}
 
 
 def _raise_exception(message: str) -> None:
@@ -57,9 +52,9 @@ class TextGenerator:
 
         settings = chat_config if isinstance(chat_config, dict) else {}
         template_name = settings.get("template", chat_config)
-        template_source = NAMED_TEMPLATES.get(template_name)
-        if template_source is None:
-            template_source = (self.model_dir / template_name).read_text()
+        template_file = TEMPLATE_ALIASES.get(template_name, template_name)
+        assert isinstance(template_file, str), f"invalid template: {template_name}"
+        template_source = (self.model_dir / template_file).read_text()
 
         engine_options = settings.get("engine_options", {})
         environment = Environment(
@@ -88,10 +83,9 @@ class TextGenerator:
                 messages=[{"role": "user", "content": prompt}], **variables
             )
 
-        add_special_tokens = self.add_special_tokens and not self.template
         input_ids = self.tokenizer.encode(
             prompt,
-            add_special_tokens=add_special_tokens,
+            add_special_tokens=self.add_special_tokens,
         ).ids
         if self.bos_token_id is not None:
             input_ids.insert(0, self.bos_token_id)
