@@ -6,7 +6,7 @@ This on-device harness evaluates Arm-optimized generative ONNX models. Supply a 
 
 It demonstrates:
 
-- A multi-stage Docker build that snapshots a Hugging Face repository into the image at build time. The Target needs no Hugging Face token or network access.
+- A multi-stage Docker build that snapshots a Hugging Face repository into the image at build time.
 - A config-driven inference runner that maps `config.yaml` from each model repository to prompt processing and ONNX Runtime GenAI operations.
 - Streaming output with time to first token (TTFT), decode throughput, and token counts in a Gradio interface.
 

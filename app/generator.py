@@ -10,8 +10,8 @@ import yaml
 from jinja2 import Environment
 from tokenizers import Tokenizer
 
-NAMED_TEMPLATES = {
-    "gemma3_instruct": (
+CHAT_TEMPLATES = {
+    "gemma3": (
         "{{ bos_token }}<start_of_turn>user\n{{ messages[0].content }}"
         "<end_of_turn>\n<start_of_turn>model\n"
     )
@@ -57,7 +57,7 @@ class TextGenerator:
 
         settings = chat_config if isinstance(chat_config, dict) else {}
         template_name = settings.get("template", chat_config)
-        template_source = NAMED_TEMPLATES.get(template_name)
+        template_source = CHAT_TEMPLATES.get(template_name)
         if template_source is None:
             template_source = (self.model_dir / template_name).read_text()
 
