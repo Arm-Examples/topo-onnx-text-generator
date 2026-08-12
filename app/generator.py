@@ -24,6 +24,15 @@ class TextGenerator:
         self.model_dir = Path(model_dir)
         config_path = self.model_dir / "config.yaml"
         config = yaml.safe_load(config_path.read_text())
+        metadata = yaml.safe_load((self.model_dir / "metadata.yaml").read_text())
+
+        self.title = metadata.get("title", "Text Generator")
+        self.id = metadata.get("id")
+        self.description = metadata.get(
+            "description",
+            "Enter a prompt and click **Generate** to see the model's response.",
+        )
+
         generation = config.get("generation", {})
         preprocessing = config.get("input", {}).get("preprocessing", [])
         operations = {

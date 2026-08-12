@@ -7,7 +7,13 @@ from generator import TextGenerator
 MODEL_DIR = "model"
 
 
-def build_demo(generator: TextGenerator) -> gr.Interface:
+def build_demo(generator: TextGenerator) -> gr.Blocks:
+    description = generator.description
+    if generator.id:
+        description = (
+            f"[{generator.id}](https://www.huggingface.co/{generator.id}) -- "
+        ) + description
+
     return gr.Interface(
         fn=generator.generate,
         inputs=gr.Textbox(
@@ -19,8 +25,8 @@ def build_demo(generator: TextGenerator) -> gr.Interface:
             gr.Textbox(lines=10, label="Generated text"),
             gr.Markdown(),
         ],
-        title="Edge Text Generator",
-        description="Enter a prompt and click **Generate** to see the model's response.",
+        title=generator.title,
+        description=description,
         submit_btn="Generate",
         clear_btn=None,
         flagging_mode="never",
