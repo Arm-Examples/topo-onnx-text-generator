@@ -52,7 +52,7 @@ Install [Topo](https://github.com/arm/topo), then use it to clone and deploy the
 The clone step will prompt you for value for the `MODEL` parameter. Leave the input empty to select the default.
 
 ```bash
-topo clone git@github.com:Arm-Examples/topo-onnx-text-generator.git
+topo clone https://github.com/Arm-Examples/topo-onnx-text-generator.git
 ```
 
 ### Build and deploy the Project
