@@ -5,8 +5,8 @@ WORKDIR /downloader
 COPY uv.lock pyproject.toml .python-version ./
 RUN uv sync --locked --no-install-project --only-group downloader
 
-ARG MODEL
-RUN --mount=type=secret,id=hf_token,env=HF_TOKEN uv run --no-sync hf download "$MODEL" --local-dir model
+ARG HF_REPO_ID
+RUN --mount=type=secret,id=hf_token,env=HF_TOKEN uv run --no-sync hf download "$HF_REPO_ID" --local-dir model
 
 FROM astral/uv:python3.12-bookworm-slim AS runtime
 

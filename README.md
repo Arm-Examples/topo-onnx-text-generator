@@ -37,11 +37,11 @@ The 8B models produce images larger than 5 GB before runtime dependencies. Ensur
 
 ## Project parameter
 
-`MODEL` is an optional Project parameter passed to the Docker build as an argument:
+`HF_REPO_ID` is an optional Project parameter passed to the Docker build as an argument:
 
-| Parameter | Required | Description                   | Default                                              |
-| --------- | -------- | ----------------------------- | ---------------------------------------------------- |
-| `MODEL`   | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
+| Parameter    | Required | Description                   | Default                                              |
+| ------------ | -------- | ----------------------------- | ---------------------------------------------------- |
+| `HF_REPO_ID` | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
 
 ## Usage
 
@@ -49,7 +49,7 @@ Install [Topo](https://github.com/arm/topo), then use it to clone and deploy the
 
 ### Clone the Project
 
-The clone step will prompt you for value for the `MODEL` parameter. Leave the input empty to select the default.
+The clone step will prompt you for a value for the `HF_REPO_ID` parameter. Leave the input empty to select the default.
 
 ```bash
 topo clone https://github.com/Arm-Examples/topo-onnx-text-generator.git
