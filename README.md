@@ -35,13 +35,14 @@ A compatible repository must contain:
 
 The 8B models produce images larger than 5 GB before runtime dependencies. Ensure that the Host and Target have enough disk space and memory.
 
-## Project parameter
+## Project parameters
 
-`MODEL` is an optional Project parameter passed to the Docker build as an argument:
+`MODEL` and `HF_ENDPOINT` are optional Project parameters passed to the Docker build as arguments:
 
-| Parameter | Required | Description                   | Default                                              |
-| --------- | -------- | ----------------------------- | ---------------------------------------------------- |
-| `MODEL`   | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
+| Parameter     | Required | Description                   | Default                                              |
+| ------------- | -------- | ----------------------------- | ---------------------------------------------------- |
+| `MODEL`       | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
+| `HF_ENDPOINT` | no       | Hugging Face API endpoint      | `https://huggingface.co`                             |
 
 ## Usage
 
@@ -49,7 +50,7 @@ Install [Topo](https://github.com/arm/topo), then use it to clone and deploy the
 
 ### Clone the Project
 
-The clone step will prompt you for value for the `MODEL` parameter. Leave the input empty to select the default.
+The clone step will prompt you for values for the `MODEL` and `HF_ENDPOINT` parameters. Leave either input empty to select its default.
 
 ```bash
 topo clone https://github.com/Arm-Examples/topo-onnx-text-generator.git

@@ -5,6 +5,7 @@ services:
       context: .
       args:
         MODEL: Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4
+        HF_ENDPOINT: https://huggingface.co
       secrets:
         - hf_token
     ports:
@@ -30,3 +31,9 @@ x-topo:
       hints:
         huggingface.task: text-generation
         file.format: onnx
+    HF_ENDPOINT:
+      description: "Hugging Face API endpoint for downloading models"
+      default: "https://huggingface.co"
+      example: "https://hf-mirror.com/"
+      hints:
+        meta.type: huggingface.endpoint
