@@ -4,7 +4,7 @@ services:
     build:
       context: .
       args:
-        MODEL: Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4
+        HF_REPO_ID: Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4
       secrets:
         - hf_token
     ports:
@@ -33,9 +33,10 @@ x-topo:
     Run `topo ps` and wait until the generator service reports a healthy status.
     Then open http://<target-ip>:7860 in your browser to enter a prompt.
   parameters:
-    MODEL:
+    HF_REPO_ID:
       description: "Hugging Face repository containing config.yaml and an ONNX Runtime GenAI bundle"
       default: "Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4"
       hints:
-        huggingface.task: text-generation
-        file.format: onnx
+        meta.type: huggingface.repo-id
+        model.task: text-generation
+        model.format: onnx
