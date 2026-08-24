@@ -9,6 +9,12 @@ services:
         - hf_token
     ports:
       - "7860:7860"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:7860/', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
 
 secrets:
   hf_token:
@@ -22,7 +28,10 @@ x-topo:
     through a Gradio web interface, and measure time to first token and decode
     throughput on the Target CPU. The Target does not require a GPU.
   deployment_success_message: |
-    Text generator deployed successfully. Open http://<target-ip>:7860 to enter a prompt.
+    Text Generator (ONNX Runtime GenAI) is starting.
+
+    Run `topo ps` and wait until the generator service reports a healthy status.
+    Then open http://<target-ip>:7860 in your browser to enter a prompt.
   parameters:
     MODEL:
       description: "Hugging Face repository containing config.yaml and an ONNX Runtime GenAI bundle"
