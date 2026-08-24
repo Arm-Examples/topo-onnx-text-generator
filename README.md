@@ -12,21 +12,6 @@ It demonstrates:
 
 ## Model compatibility
 
-The Project supports ONNX Runtime GenAI repositories whose files follow the configuration patterns used by these models:
-
-- [`Arm/gemma-3-1b-base-onnx-genai-int4-emb-int8`](https://huggingface.co/Arm/gemma-3-1b-base-onnx-genai-int4-emb-int8)
-- [`Arm/gemma-3-1b-instruct-onnx-genai-int4-emb-int8`](https://huggingface.co/Arm/gemma-3-1b-instruct-onnx-genai-int4-emb-int8)
-- [`Arm/llama-3-1-8b-base-onnx-genai-int4-kquantlast-emb-int8`](https://huggingface.co/Arm/llama-3-1-8b-base-onnx-genai-int4-kquantlast-emb-int8)
-- [`Arm/llama-3-1-8b-instruct-onnx-genai-int4-kquantlast-emb-int8`](https://huggingface.co/Arm/llama-3-1-8b-instruct-onnx-genai-int4-kquantlast-emb-int8)
-- [`Arm/llama-3-2-1b-base-onnx-genai-int4-kquantlast-emb-int8-graviton-g4`](https://huggingface.co/Arm/llama-3-2-1b-base-onnx-genai-int4-kquantlast-emb-int8-graviton-g4)
-- [`Arm/llama-3-2-1b-base-onnx-genai-int4-kquantlast-emb-int8-vivo-x300`](https://huggingface.co/Arm/llama-3-2-1b-base-onnx-genai-int4-kquantlast-emb-int8-vivo-x300)
-- [`Arm/llama-3-2-1b-instruct-onnx-genai-int4-kquantlast-emb-int8-graviton-g4`](https://huggingface.co/Arm/llama-3-2-1b-instruct-onnx-genai-int4-kquantlast-emb-int8-graviton-g4)
-- [`Arm/llama-3-2-1b-instruct-onnx-genai-int4-kquantlast-emb-int8-vivo-x300`](https://huggingface.co/Arm/llama-3-2-1b-instruct-onnx-genai-int4-kquantlast-emb-int8-vivo-x300)
-- [`Arm/llama-3-2-3b-instruct-onnx-genai-int4-kquantlast-emb-int8`](https://huggingface.co/Arm/llama-3-2-3b-instruct-onnx-genai-int4-kquantlast-emb-int8)
-- [`Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4`](https://huggingface.co/Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4)
-- [`Arm/tinyllama-1-1b-chat-onnx-genai-int4-kquantlast-emb-int8-graviton-g4`](https://huggingface.co/Arm/tinyllama-1-1b-chat-onnx-genai-int4-kquantlast-emb-int8-graviton-g4)
-- [`Arm/tinyllama-1-1b-chat-onnx-genai-int4-kquantlast-emb-int8-vivo-x300`](https://huggingface.co/Arm/tinyllama-1-1b-chat-onnx-genai-int4-kquantlast-emb-int8-vivo-x300)
-
 A compatible repository must contain:
 
 - `config.yaml` with a supported `input.preprocessing` pipeline.
