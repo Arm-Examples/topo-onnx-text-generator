@@ -12,21 +12,6 @@ It demonstrates:
 
 ## Model compatibility
 
-The Project supports ONNX Runtime GenAI repositories whose files follow the configuration patterns used by these models:
-
-- [`Arm/gemma-3-1b-base-onnx-genai-int4-emb-int8`](https://huggingface.co/Arm/gemma-3-1b-base-onnx-genai-int4-emb-int8)
-- [`Arm/gemma-3-1b-instruct-onnx-genai-int4-emb-int8`](https://huggingface.co/Arm/gemma-3-1b-instruct-onnx-genai-int4-emb-int8)
-- [`Arm/llama-3-1-8b-base-onnx-genai-int4-kquantlast-emb-int8`](https://huggingface.co/Arm/llama-3-1-8b-base-onnx-genai-int4-kquantlast-emb-int8)
-- [`Arm/llama-3-1-8b-instruct-onnx-genai-int4-kquantlast-emb-int8`](https://huggingface.co/Arm/llama-3-1-8b-instruct-onnx-genai-int4-kquantlast-emb-int8)
-- [`Arm/llama-3-2-1b-base-onnx-genai-int4-kquantlast-emb-int8-graviton-g4`](https://huggingface.co/Arm/llama-3-2-1b-base-onnx-genai-int4-kquantlast-emb-int8-graviton-g4)
-- [`Arm/llama-3-2-1b-base-onnx-genai-int4-kquantlast-emb-int8-vivo-x300`](https://huggingface.co/Arm/llama-3-2-1b-base-onnx-genai-int4-kquantlast-emb-int8-vivo-x300)
-- [`Arm/llama-3-2-1b-instruct-onnx-genai-int4-kquantlast-emb-int8-graviton-g4`](https://huggingface.co/Arm/llama-3-2-1b-instruct-onnx-genai-int4-kquantlast-emb-int8-graviton-g4)
-- [`Arm/llama-3-2-1b-instruct-onnx-genai-int4-kquantlast-emb-int8-vivo-x300`](https://huggingface.co/Arm/llama-3-2-1b-instruct-onnx-genai-int4-kquantlast-emb-int8-vivo-x300)
-- [`Arm/llama-3-2-3b-instruct-onnx-genai-int4-kquantlast-emb-int8`](https://huggingface.co/Arm/llama-3-2-3b-instruct-onnx-genai-int4-kquantlast-emb-int8)
-- [`Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4`](https://huggingface.co/Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4)
-- [`Arm/tinyllama-1-1b-chat-onnx-genai-int4-kquantlast-emb-int8-graviton-g4`](https://huggingface.co/Arm/tinyllama-1-1b-chat-onnx-genai-int4-kquantlast-emb-int8-graviton-g4)
-- [`Arm/tinyllama-1-1b-chat-onnx-genai-int4-kquantlast-emb-int8-vivo-x300`](https://huggingface.co/Arm/tinyllama-1-1b-chat-onnx-genai-int4-kquantlast-emb-int8-vivo-x300)
-
 A compatible repository must contain:
 
 - `config.yaml` with a supported `input.preprocessing` pipeline.
@@ -37,12 +22,12 @@ The 8B models produce images larger than 5 GB before runtime dependencies. Ensur
 
 ## Project parameters
 
-`MODEL` and `HF_ENDPOINT` are optional Project parameters passed to the Docker build as arguments:
+`HF_REPO_ID` and `HF_ENDPOINT` are optional Project parameters passed to the Docker build as arguments:
 
-| Parameter     | Required | Description                   | Default                                              |
-| ------------- | -------- | ----------------------------- | ---------------------------------------------------- |
-| `MODEL`       | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
-| `HF_ENDPOINT` | no       | Hugging Face API endpoint      | `https://huggingface.co`                             |
+| Parameter     | Required | Description                        | Default                                              |
+| ------------- | -------- | ---------------------------------- | ---------------------------------------------------- |
+| `HF_REPO_ID`  | no       | Hugging Face model repository      | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
+| `HF_ENDPOINT` | no       | Hugging Face API endpoint           | `https://huggingface.co`                             |
 
 ## Usage
 
@@ -50,7 +35,7 @@ Install [Topo](https://github.com/arm/topo), then use it to clone and deploy the
 
 ### Clone the Project
 
-The clone step will prompt you for values for the `MODEL` and `HF_ENDPOINT` parameters. Leave either input empty to select its default.
+The clone step will prompt you for values for the `HF_REPO_ID` and `HF_ENDPOINT` parameters. Leave either input empty to select its default.
 
 ```bash
 topo clone https://github.com/Arm-Examples/topo-onnx-text-generator.git
