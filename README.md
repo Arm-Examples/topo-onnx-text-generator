@@ -42,7 +42,7 @@ The 8B models produce images larger than 5 GB before runtime dependencies. Ensur
 | Parameter     | Required | Description                   | Default                                              |
 | ------------- | -------- | ----------------------------- | ---------------------------------------------------- |
 | `MODEL`       | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
-| `HF_ENDPOINT` | no       | Hugging Face API endpoint     | `https://huggingface.co`                             |
+| `HF_ENDPOINT` | no       | Hugging Face API endpoint      | `https://huggingface.co`                             |
 
 ## Usage
 

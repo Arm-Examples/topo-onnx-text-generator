@@ -1,21 +1,21 @@
-FROM alpine:3.24 AS model-downloader
+FROM astral/uv:python3.12-bookworm-slim AS model-downloader
 
-RUN apk add --no-cache bash aria2 curl jq
+WORKDIR /downloader
 
-COPY --chmod=755 scripts/hfd.sh hfd.sh
+COPY uv.lock pyproject.toml .python-version ./
+RUN uv sync --locked --no-install-project --only-group downloader
 
 ARG HF_ENDPOINT
 ARG MODEL
-
 ENV HF_ENDPOINT=${HF_ENDPOINT}
-RUN --mount=type=secret,id=hf_token,env=HF_TOKEN ./hfd.sh "${MODEL}" --local-dir /downloader/model
+RUN --mount=type=secret,id=hf_token,env=HF_TOKEN uv run --no-sync hf download "$MODEL" --local-dir model
 
 FROM astral/uv:python3.12-bookworm-slim AS runtime
 
 WORKDIR /runtime
 
 COPY uv.lock pyproject.toml .python-version ./
-RUN uv sync --locked --no-install-project
+RUN uv sync --locked --no-install-project --only-group runtime
 
 COPY --from=model-downloader /downloader/model model
 COPY app app
