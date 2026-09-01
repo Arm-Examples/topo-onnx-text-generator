@@ -4,11 +4,7 @@ version = "0.1.0"
 description = "Config-driven ONNX Runtime GenAI text generation for Arm devices"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
-
-[dependency-groups]
-downloader = ["huggingface-hub==1.26.0"]
-runtime = [
+dependencies = [
     "gradio>=6.22.0",
     "jinja2>=3.1.6",
     "onnxruntime==1.27.0",

@@ -1065,12 +1065,7 @@ wheels = [
 name = "topo-onnx-text-generator"
 version = "0.1.0"
 source = { virtual = "." }
-
-[package.dev-dependencies]
-downloader = [
-    { name = "huggingface-hub" },
-]
-runtime = [
+dependencies = [
     { name = "gradio" },
     { name = "jinja2" },
     { name = "onnxruntime" },
@@ -1080,10 +1075,7 @@ runtime = [
 ]
 
 [package.metadata]
-
-[package.metadata.requires-dev]
-downloader = [{ name = "huggingface-hub", specifier = "==1.26.0" }]
-runtime = [
+requires-dist = [
     { name = "gradio", specifier = ">=6.22.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "onnxruntime", specifier = "==1.27.0" },
