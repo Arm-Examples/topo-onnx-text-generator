@@ -33,6 +33,9 @@ def list_files(endpoint: str, repo_id: str, token: str | None) -> list[str]:
 def download_batch(
     endpoint: str, repo_id: str, files: list[str], out_dir: Path, token: str | None
 ) -> None:
+    if shutil.which("aria2c") is None:
+        raise RuntimeError("aria2c is required but was not found on PATH")
+
     input_file = tempfile.NamedTemporaryFile()
     for file in files:
         input_file.write(f"{endpoint}/{repo_id}/resolve/main/{file}\n".encode())
