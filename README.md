@@ -24,10 +24,10 @@ The 8B models produce images larger than 5 GB before runtime dependencies. Ensur
 
 `HF_REPO_ID` and `HF_ENDPOINT` are optional Project parameters passed to the Docker build as arguments:
 
-| Parameter     | Required | Description                        | Default                                              |
-| ------------- | -------- | ---------------------------------- | ---------------------------------------------------- |
-| `HF_REPO_ID`  | no       | Hugging Face model repository      | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
-| `HF_ENDPOINT` | no       | Hugging Face API endpoint           | `https://huggingface.co`                             |
+| Parameter     | Required | Description                   | Default                                              |
+| ------------- | -------- | ----------------------------- | ---------------------------------------------------- |
+| `HF_REPO_ID`  | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
+| `HF_ENDPOINT` | no       | Hugging Face API endpoint     | `https://huggingface.co`                             |
 
 ## Usage
 
@@ -45,11 +45,12 @@ topo clone https://github.com/Arm-Examples/topo-onnx-text-generator.git
 
 ```bash
 cd topo-onnx-text-generator
-export HF_TOKEN=<your-hf-read-token>
 topo deploy --target <user@hostname>
 ```
 
-Topo builds the image on the Host and transfers the finished image to the Target over SSH. The Target does not receive the token and does not need network access to download the model.
+Topo builds the image on the Host and transfers the finished image to the Target over SSH. The Target does not need network access to download the model.
+
+> **Note:** To download a private model at build time, set `HF_TOKEN` on the Host before running `topo deploy`. The token must have read access to the repository. The build mounts it as a secret and does not store it in the image or transfer it to the Target. Public repositories do not require a token.
 
 ### What you will see
 
