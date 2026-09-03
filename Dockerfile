@@ -4,6 +4,8 @@ WORKDIR /downloader
 
 RUN apt-get update && apt-get install -y --no-install-recommends aria2
 
+COPY uv.lock pyproject.toml .python-version ./
+RUN uv sync --locked --no-install-project --only-group downloader
 COPY scripts/download_model.py scripts/download_model.py
 
 ARG HF_ENDPOINT
@@ -17,7 +19,7 @@ FROM astral/uv:python3.12-bookworm-slim AS runtime
 WORKDIR /runtime
 
 COPY uv.lock pyproject.toml .python-version ./
-RUN uv sync --locked --no-install-project
+RUN uv sync --locked --no-install-project --only-group runtime
 
 COPY --from=model-downloader /downloader/model model
 COPY app app
