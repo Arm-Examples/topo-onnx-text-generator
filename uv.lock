@@ -1065,7 +1065,12 @@ wheels = [
 name = "topo-onnx-text-generator"
 version = "0.1.0"
 source = { virtual = "." }
-dependencies = [
+
+[package.dev-dependencies]
+downloader = [
+    { name = "pyyaml" },
+]
+runtime = [
     { name = "gradio" },
     { name = "jinja2" },
     { name = "onnxruntime" },
@@ -1075,7 +1080,10 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [
+
+[package.metadata.requires-dev]
+downloader = [{ name = "pyyaml", specifier = ">=6.0.3" }]
+runtime = [
     { name = "gradio", specifier = ">=6.22.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "onnxruntime", specifier = "==1.27.0" },

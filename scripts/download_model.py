@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from urllib import request
 
+import yaml
 
 MAX_CONCURRENT_FILES = 4
 MAX_CONN_PER_SERVER = 16
@@ -18,6 +19,21 @@ def require_env(var_name: str) -> str:
     if not value:
         raise ValueError(f"{var_name} environment variable is not set")
     return value
+
+
+def download_file(
+    endpoint: str, repo_id: str, file_path: str, out_dir: Path, token: str | None
+) -> Path:
+    url = f"{endpoint}/{repo_id}/resolve/main/{file_path}"
+    headers = {}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    out_file_path = out_dir / file_path
+    out_file_path.parent.mkdir(parents=True, exist_ok=True)
+    with request.urlopen(request.Request(url, headers=headers)) as response:
+        with open(out_file_path, "wb") as out_file:
+            shutil.copyfileobj(response, out_file)
+    return out_file_path
 
 
 def list_files(endpoint: str, repo_id: str, token: str | None) -> list[str]:
@@ -44,6 +60,7 @@ def download_batch(
 
     cmd = [
         "aria2c",
+        "-c",
         "-x",
         str(MAX_CONN_PER_SERVER),
         "-s",
@@ -74,9 +91,20 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     files = list_files(endpoint, repo_id, token)
-    for file in ["metadata.yaml", "config.yaml"]:
+    if "metadata.yaml" not in files:
+        raise ValueError("error: metadata.yaml is missing from the repository")
+
+    metadata = download_file(endpoint, repo_id, "metadata.yaml", out_dir, token)
+    try:
+        model = yaml.safe_load(metadata.read_text())["filename"]
+    except (KeyError, TypeError, yaml.YAMLError):
+        raise ValueError("error: metadata.yaml must define filename")
+
+    for file in (model, "config.yaml"):
         if file not in files:
-            raise ValueError(f"error: {file} is missing from the repository")
+            raise ValueError(
+                f"error: required file {file} is missing from the repository"
+            )
 
     download_batch(endpoint, repo_id, files, out_dir, token)
 
