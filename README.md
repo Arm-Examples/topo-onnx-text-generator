@@ -17,17 +17,21 @@ A compatible repository must contain:
 - `config.yaml` with a supported `input.preprocessing` pipeline.
 - `genai_config.json`, the model and its external-data sidecar, `tokenizer.json`, and `tokenizer_config.json`.
 - The referenced Jinja chat template, when `config.yaml` specifies one.
+- For memory checks: YAML reports in `benchmarks/` with `profile: Arm-Optimized`, `context.runtime.execution_backend: cpu`, and positive `performance.peak_memory_mb` values.
 
 The 8B models produce images larger than 5 GB before runtime dependencies. Ensure that the Host and Target have enough disk space and memory.
 
+When `TARGET_MEMORY_KIB` is supplied, the build rejects models whose largest optimized CPU peak-memory benchmark exceeds Target RAM. Missing or invalid benchmarks also fail the build. When omitted, the build warns and skips the check. This check does not account for larger workloads or memory used by the OS and other processes.
+
 ## Project parameters
 
-`HF_REPO_ID` and `HF_ENDPOINT` are optional Project parameters passed to the Docker build as arguments:
+Project parameters are passed to the Docker build as arguments:
 
-| Parameter     | Required | Description                   | Default                                              |
-| ------------- | -------- | ----------------------------- | ---------------------------------------------------- |
-| `HF_REPO_ID`  | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
-| `HF_ENDPOINT` | no       | Hugging Face API endpoint     | `https://huggingface.co`                             |
+| Parameter           | Required | Description                   | Default                                              |
+| ------------------- | -------- | ----------------------------- | ---------------------------------------------------- |
+| `HF_REPO_ID`        | no       | Hugging Face model repository | `Arm/qwen3-0-6b-onnx-genai-int4-kquantlast-emb-int4` |
+| `HF_ENDPOINT`       | no       | Hugging Face API endpoint     | `https://huggingface.co`                             |
+| `TARGET_MEMORY_KIB` | no       | Total Target RAM in KiB       | Unset (check skipped)                                |
 
 ## Usage
 
@@ -49,6 +53,16 @@ topo deploy --target <user@hostname>
 ```
 
 Topo builds the image on the Host and transfers the finished image to the Target over SSH. The Target does not need network access to download the model.
+
+### Enable the memory check
+
+Supply total Target RAM in KiB:
+
+```bash
+topo configure TARGET_MEMORY_KIB=1924080
+```
+
+Refresh the value when changing Targets. Then run `topo deploy` as usual.
 
 > **Note:** To download a private model at build time, set `HF_TOKEN` on the Host before running `topo deploy`. The token must have read access to the repository. The build mounts it as a secret and does not store it in the image or transfer it to the Target. Public repositories do not require a token.
 
