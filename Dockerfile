@@ -12,6 +12,8 @@ ARG HF_ENDPOINT
 ENV HF_ENDPOINT=${HF_ENDPOINT}
 ARG HF_REPO_ID
 ENV HF_REPO_ID=${HF_REPO_ID}
+ARG TARGET_MEMORY_KIB
+ENV TARGET_MEMORY_KIB=${TARGET_MEMORY_KIB}
 RUN --mount=type=secret,id=hf_token,env=HF_TOKEN uv run scripts/download_model.py
 
 FROM astral/uv:python3.12-bookworm-slim AS runtime

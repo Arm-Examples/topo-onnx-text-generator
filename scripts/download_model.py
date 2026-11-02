@@ -3,6 +3,8 @@ import shutil
 import tempfile
 import subprocess
 import json
+import math
+import sys
 from pathlib import Path
 from urllib import request
 
@@ -36,8 +38,10 @@ def download_file(
     return out_file_path
 
 
-def list_files(endpoint: str, repo_id: str, token: str | None) -> list[str]:
-    url = f"{endpoint}/api/models/{repo_id}/tree/main?limit=1000&recursive=true"
+def list_files(
+    endpoint: str, repo_id: str, token: str | None, directory: str = ""
+) -> list[str]:
+    url = f"{endpoint}/api/models/{repo_id}/tree/main/{directory}?limit=1000&recursive=true"
     headers = {}
     if token:
         headers["Authorization"] = f"Bearer {token}"
@@ -81,7 +85,41 @@ def download_batch(
     subprocess.run(cmd, check=True)
 
 
+def assert_memory_fits(reports: list[dict], target_memory_kib: int) -> None:
+    peaks = []
+    for report in reports:
+        profile = report.get("profile")
+        backend = report.get("context", {}).get("runtime", {}).get("execution_backend")
+        if profile != "Arm-Optimized" or backend != "cpu":
+            continue
+
+        peak = report.get("performance", {}).get("peak_memory_mb")
+        if (
+            isinstance(peak, bool)
+            or not isinstance(peak, (int, float))
+            or not math.isfinite(peak)
+            or peak <= 0
+        ):
+            raise ValueError(
+                "Optimized CPU benchmark must define positive peak_memory_mb"
+            )
+        peaks.append(peak)
+    if not peaks:
+        raise ValueError("No Arm-Optimized CPU peak-memory benchmarks found")
+
+    required_kib = math.ceil(max(peaks) * 1024)
+    if required_kib > target_memory_kib:
+        raise ValueError(
+            f"Model does not fit: benchmark peak requires {required_kib} KiB, "
+            f"target has {target_memory_kib} KiB. Choose a smaller model or larger target."
+        )
+    print(
+        f"Memory check passed: peak {required_kib} KiB <= target {target_memory_kib} KiB"
+    )
+
+
 def main() -> None:
+    target_memory_kib = os.getenv("TARGET_MEMORY_KIB")
     repo_id = require_env("HF_REPO_ID")
     endpoint = require_env("HF_ENDPOINT").rstrip("/")
     token = os.getenv("HF_TOKEN")
@@ -105,6 +143,24 @@ def main() -> None:
             raise ValueError(
                 f"error: required file {file} is missing from the repository"
             )
+
+    if target_memory_kib is not None:
+        benchmark_files = list_files(endpoint, repo_id, token, "benchmarks")
+        reports = [
+            yaml.safe_load(
+                download_file(endpoint, repo_id, file, out_dir, token).read_text()
+            )
+            for file in benchmark_files
+            if file.endswith((".yaml", ".yml"))
+        ]
+        if any(not isinstance(report, dict) for report in reports):
+            raise ValueError("Benchmark reports must be YAML mappings")
+        assert_memory_fits(reports, int(target_memory_kib))
+    else:
+        print(
+            "WARNING: Target memory not supplied; skipping model memory-fit check.",
+            file=sys.stderr,
+        )
 
     download_batch(endpoint, repo_id, files, out_dir, token)
 
